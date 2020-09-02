@@ -1,9 +1,10 @@
 const mongoose=require('mongoose');
-const validator= require('validator');
+// const validator= require('validator');
 mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api",{
 useNewUrlParser:true,   
 useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify:false
 }).then((result)=>
 {console.log("Database connected Successfully");}).catch((reject)=>{
     console.log(reject);
@@ -55,17 +56,17 @@ useUnifiedTopology: true,
 // })
 
 //Model for task
-const Task= mongoose.model('Task',{
-    Desc:{
-        type:String,
-        trim:true,
-        required:true
-    },
-    completed_status:{
-        type:Boolean,
-        default:false
-    }
-})
+// const Task= mongoose.model('Task',{
+//     Desc:{
+//         type:String,
+//         trim:true,
+//         required:true
+//     },
+//     completed_status:{
+//         type:Boolean,
+//         default:false
+//     }
+// })
 
 // const me = new User({
 //     name:"ranjit",
@@ -74,18 +75,18 @@ const Task= mongoose.model('Task',{
 //     password:'     re32    '
 // })
 
-const task_call= new Task({
-    Desc:"Check Emails"
-  //  completed_status: false
-})
+// const task_call= new Task({
+//     Desc:"Check Emails"
+//   //  completed_status: false
+// })
 
-task_call.save().then((result)=>{
-console.log(result)
-}
-).catch((error)=>
-{
-    console.log(Error,error)
-})
+// task_call.save().then((result)=>{
+// console.log(result)
+// }
+// ).catch((error)=>
+// {
+//     console.log(Error,error)
+// })
 
 // me.save().then((result)=>{
 // console.log(result)
