@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node source/index.js",
-    "dev":"nodemon source/index.js"
+    "dev": "nodemon source/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.0",
     "mongoose": "^5.10.0",
     "validator": "^13.1.1"
