@@ -59,7 +59,10 @@ const Userschema= new mongoose.Schema({
             required:true,
             type: String
         }
-    }]
+    }],
+    avatar:{
+        type:Buffer
+    }
 },{
     timestamps:true
 })
@@ -78,12 +81,13 @@ Userschema.methods.toJSON= function()
 
     delete userObject.password;
     delete userObject.tokens;
+    delete userObject.avatar;
     return userObject;
 }
 
 Userschema.methods.generateAuthToken =async function (){
     const user=this;
-    const token=jwt.sign({_id: user._id.toString()},'thisismynewtry' )
+    const token=jwt.sign({_id: user._id.toString()},process.env.JWT_TOKEN )
     user.tokens=user.tokens.concat({token});
     await user.save()
     return token

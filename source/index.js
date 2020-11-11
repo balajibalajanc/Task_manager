@@ -5,7 +5,7 @@ const userRouter=require('./routers/user_router');
 const taskRouter=require('./routers/task_router');
 
 const app=express()
-const port=process.env.PORT || 3000
+const port=process.env.PORT
 
 // app.use((req,res,next)=>{
 //     console.log("Application is under maintenace " + req.method + req.path);
@@ -23,6 +23,32 @@ app.use(taskRouter);
 app.get("/",(request,response)=>{
     response.send(' Main Page status: Page under Construction')
 })
+
+app.get("/user/",(request,response)=>{
+    response.send(' Main Page status: Page under Construction')
+})
+
+// const multer=require('multer');
+// const upload =multer({
+//     dest:'Documents',
+//     limits: {
+//         fileSize:100000000
+//     },
+//     fileFilter(request,file,cb){
+//         if(!file.originalname.match(/\.(doc$|docx$)/))
+//     {
+//         return cb(new Error("Please provide a Document file"))
+//     }
+//      cb (undefined,true);
+// }
+
+// })
+// app.post('/upload',upload.single('upload'),(req,res) => {
+//     res.status(200).send("Document saved successfully");
+// },(error,req,res,next)=> {
+//     res.send(error.message)
+// })
+
 
 app.listen(port,()=>{
 console.log('sever is up and running in '+ port );

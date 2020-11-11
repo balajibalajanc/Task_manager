@@ -3,6 +3,9 @@ const User=require('../models/user');
 const auth=require('../middle_ware/auth');
 const { request, response } = require('express');
 const router=new express.Router();
+const multer=require('multer');
+const sharp= require('sharp');
+const { sendWelcomeEmail,sendCancelationEmail } = require('../emails/accounts');
 
  //find the user of the specific id
 //  router.get('/users/:id', async(request,response)=>{
@@ -39,6 +42,7 @@ const router=new express.Router();
     const user=new User(request.body);
 try {
     await user.save();
+    sendWelcomeEmail(user.email,user.name);
     const token= await user.generateAuthToken();
     response.status(201).send({ user,token });
 }catch(e){
@@ -156,11 +160,64 @@ router.get('/users/me', auth,async (request,response)=>{
         //  }
 
         await request.user.remove()
+        sendCancelationEmail(request.user.email,request.user.name);
          response.status(200).send({User:request.user,Message:"Item delete successfully"})
      }
      catch(e){
          response.status(400).send(e)
      }
  }) 
+
+//including a profile picture
+ const avatar =multer({
+    limits: {
+        fileSize:1000000
+    },
+    fileFilter(request,file,cb){
+        if(!file.originalname.match(/\.(jgp$)/))
+    {
+        return cb(new Error("Please provide a proper file"))
+    }
+     cb (undefined,true);
+
+    }
+})
+router.post('/users/me/avatar',auth ,avatar.single('avatars'), async(req,res) => {
+   
+   const buffer= await sharp(req.file.buffer).resize({
+       width:250,
+       height:250
+   }).png().toBuffer(); 
+    req.user.avatar=buffer;
+   await req.user.save();
+    res.status(200).send("images saved successfully");
+},(error,req,res,next)=> {
+    res.send(error.message)
+})
+
+router.delete('/users/me/avatar',auth , async(req,res) => {
+     req.user.avatar=undefined;
+     await req.user.save();
+         res.status(200).send("images deleted successfully");
+},(error,req,res,next)=> {
+    res.send(error.message)
+})
+
+
+//get the avatar
+router.get('/users/:id/avatar',async (req,res)=> {
+try {
+    const user= await User.findById(req.params.id);
+if(!user || !user.avatar)
+{
+    throw new Error();
+}
+res.set('Content-Type','image/png');
+res.send(user.avatar)
+
+}catch(e){
+res.status(400).send(e);
+}
+})
 
  module.exports=router
