@@ -46,6 +46,7 @@ try {
     const token= await user.generateAuthToken();
     response.status(201).send({ user,token });
 }catch(e){
+    console.log(e);
     response.status(400).send(e)
 }
 
@@ -67,6 +68,7 @@ router.post('/users/login',async (request,response)=>{
     response.send({user,token});
    }
    catch(e){
+       console.log(e);
     response.status(400).send(e);
    } 
 })
